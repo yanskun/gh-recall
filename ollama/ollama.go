@@ -34,8 +34,9 @@ type Response struct {
 }
 
 type OllamaService struct {
-	url     string
-	content string
+	url    string
+	model  string
+	locale string
 }
 
 type OllamaServiceInterface interface {
@@ -43,10 +44,11 @@ type OllamaServiceInterface interface {
 	GenerateSummaries(content string) string
 }
 
-func NewOllamaService(url string, content string) OllamaServiceInterface {
+func NewOllamaService(url string, model string, lang string) OllamaServiceInterface {
 	return &OllamaService{
-		url:     url,
-		content: content,
+		url:    url,
+		model:  model,
+		locale: lang,
 	}
 }
 
@@ -102,15 +104,15 @@ Section2 Content
 
 Section3 Content
 
-%s
-`, "```", content, "```")
+<!-- !! REMINDER: All output MUST be in **%s**. DO NOT USE ANY OTHER LANGUAGE !! -->
+`, s.locale, content, s.locale)
 
 	msg := Message{
 		Role:    "user",
 		Content: prompt,
 	}
 	req := Request{
-		Model:    "phi4",
+		Model:    s.model,
 		Stream:   false,
 		Messages: []Message{msg},
 	}
