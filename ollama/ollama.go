@@ -34,21 +34,23 @@ type Response struct {
 }
 
 type OllamaService struct {
-	url    string
-	model  string
-	locale string
+	content string
+	url     string
+	model   string
+	locale  string
 }
 
 type OllamaServiceInterface interface {
+	GenerateSummaries() string
 	requestOllama(req Request) (*Response, error)
-	GenerateSummaries(content string) string
 }
 
-func NewOllamaService(url string, model string, lang string) OllamaServiceInterface {
+func NewOllamaService(content string, url string, model string, lang string) OllamaServiceInterface {
 	return &OllamaService{
-		url:    url,
-		model:  model,
-		locale: lang,
+		content: content,
+		url:     url,
+		model:   model,
+		locale:  lang,
 	}
 }
 
@@ -72,7 +74,7 @@ func (s *OllamaService) requestOllama(req Request) (*Response, error) {
 	return &ollamaResp, err
 }
 
-func (s *OllamaService) GenerateSummaries(content string) string {
+func (s *OllamaService) GenerateSummaries() string {
 	prompt := fmt.Sprintf(`
 !! IMPORTANT !! YOU MUST FOLLOW THIS RULE STRICTLY.
 
@@ -112,7 +114,7 @@ Section2 Content
 Section3 Content
 
 <!-- !! REMINDER: All output MUST be in **%s**. DO NOT USE ANY OTHER LANGUAGE !! -->
-`, s.locale, content, s.locale)
+`, s.locale, s.content, s.locale)
 
 	msg := Message{
 		Role:    "user",

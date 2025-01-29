@@ -37,9 +37,9 @@ func main() {
 
 	gitService := git.NewGitService(time.Now().AddDate(0, 0, -7), time.Now().AddDate(0, 0, -1))
 
-	ollamaService := ollama.NewOllamaService(DefaultOllamaURL, modelVal, localeVal)
+	ollamaService := ollama.NewOllamaService(gitService.GenerateSummary(), DefaultOllamaURL, modelVal, localeVal)
 
-	result := ollamaService.GenerateSummaries(gitService.GenerateSummary())
+	result := ollamaService.GenerateSummaries()
 
 	s.Stop()
 
