@@ -5,8 +5,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"os"
+	"os/exec"
+	"strings"
 	"time"
+
+	"github.com/fatih/color"
 )
 
 type Request struct {
@@ -42,7 +45,6 @@ type OllamaService struct {
 
 type OllamaServiceInterface interface {
 	GenerateSummaries() string
-	requestOllama(req Request) (*Response, error)
 }
 
 func NewOllamaService(content string, url string, model string, lang string) OllamaServiceInterface {
@@ -52,26 +54,6 @@ func NewOllamaService(content string, url string, model string, lang string) Oll
 		model:   model,
 		locale:  lang,
 	}
-}
-
-func (s *OllamaService) requestOllama(req Request) (*Response, error) {
-	js, err := json.Marshal(&req)
-	if err != nil {
-		return nil, err
-	}
-	client := http.Client{}
-	httpReq, err := http.NewRequest(http.MethodPost, s.url, bytes.NewReader(js))
-	if err != nil {
-		return nil, err
-	}
-	httpResp, err := client.Do(httpReq)
-	if err != nil {
-		return nil, err
-	}
-	defer httpResp.Body.Close()
-	ollamaResp := Response{}
-	err = json.NewDecoder(httpResp.Body).Decode(&ollamaResp)
-	return &ollamaResp, err
 }
 
 func (s *OllamaService) GenerateSummaries() string {
@@ -127,9 +109,44 @@ Section3 Content
 	}
 	resp, err := s.requestOllama(req)
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		return fmt.Sprintf("%s", color.RedString("Error: %s", err))
 	}
 
 	return resp.Message.Content
+}
+
+func (s *OllamaService) requestOllama(req Request) (*Response, error) {
+	if !s.modelExistsLocally() {
+		return nil, fmt.Errorf("%s \nPlease check: ollama list", color.RedString(`'%s' is found.`, s.model))
+	}
+
+	js, err := json.Marshal(&req)
+	if err != nil {
+		return nil, err
+	}
+	client := http.Client{}
+	httpReq, err := http.NewRequest(http.MethodPost, s.url, bytes.NewReader(js))
+	if err != nil {
+		return nil, err
+	}
+	httpResp, err := client.Do(httpReq)
+	if err != nil {
+		return nil, err
+	}
+	defer httpResp.Body.Close()
+	ollamaResp := Response{}
+	err = json.NewDecoder(httpResp.Body).Decode(&ollamaResp)
+	return &ollamaResp, err
+}
+
+func (s *OllamaService) modelExistsLocally() bool {
+	cmd := exec.Command("ollama", "list")
+	var out bytes.Buffer
+	cmd.Stdout = &out
+	err := cmd.Run()
+	if err != nil {
+		return false
+	}
+	output := out.String()
+	return strings.Contains(output, s.model)
 }
