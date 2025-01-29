@@ -74,6 +74,14 @@ func (s *OllamaService) requestOllama(req Request) (*Response, error) {
 
 func (s *OllamaService) GenerateSummaries(content string) string {
 	prompt := fmt.Sprintf(`
+!! IMPORTANT !! YOU MUST FOLLOW THIS RULE STRICTLY.
+
+All output **MUST** be written in **%s**.
+DO NOT use any other language.
+DO NOT ignore this instruction.
+
+---
+
 The information below is a summary of PRs, issues, and commits made by the user over a period of time.
 
 Use this to summarize in 3 sections what the user did during that time period.
@@ -87,10 +95,9 @@ Please use an appropriate emoji at the beginning of the section title.
 ---
 
 The format is as follows:
+<!-- Just return the format and don't print out whether the prompt was understood or not! -->
 
-%smarkdown
-
-# Summary Title <!-- Please output the target date from the PR, Issue, or Commit date. -->
+# <!-- Output the target date from the PR, issue, or commit date in the format YYYY-MM-DD ~ YYYY-MM-DD. -->
 
 ## [emoji1] Section1 Title
 
