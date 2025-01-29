@@ -87,6 +87,7 @@ Please use an appropriate emoji at the beginning of the section title.
 The format is as follows:
 
 %smarkdown
+
 # Summary Title <!-- Please output the target date from the PR, Issue, or Commit date. -->
 
 ## [emoji1] Section1 Title
