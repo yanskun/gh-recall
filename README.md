@@ -23,12 +23,14 @@ gh recall [options]
 
 ### Options
 
-| Option           | Description                                       | Default |
-| ---------------- | ------------------------------------------------- | ------- |
-| `-h`, `--help`   | Show help for the command.                        | -       |
-| `-d`, `--days`   | Number of days to look back when retrieving data. | `7`     |
-| `-l`, `--locale` | Output language for the summary (en, ja, etc.).   | `en`    |
-| `-m`, `--model`  | Ollama model to use for summarization.            | `phi4`  |
+| Option             | Description                                       | Default |
+| ------------------ | ------------------------------------------------- | ------- |
+| `-h`, `--help`     | Show help for the command.                        | -       |
+| `-d`, `--days`     | Number of days to look back when retrieving data. | `7`     |
+| `-l`, `--locale`   | Output language for the summary (en, ja, etc.).   | `en`    |
+| `-m`, `--model`    | Ollama model to use for summarization.            | `phi4`  |
+| `-p`, `--port`     | Port number for Ollama connection.                | `11434` |
+| `-s`, `--sections` | Number of sections to display in the summary.     | `3`     |
 
 ### Examples
 
@@ -56,12 +58,24 @@ gh recall --locale ja
 gh recall --model mistral
 ```
 
+- Change the number of sections in the summary:
+
+```shell
+gh recall --sections 5
+```
+
+- Specify the port number for Ollama:
+
+```shell
+gh recall --port 12345
+```
+
 ## Output Example
 
 When you run:
 
 ```bash
-gh recall --days 7 --locale en --model phi4
+gh recall --days 7 --locale en --model phi4 --sections 3
 ```
 
 You will get an output like this:
@@ -70,14 +84,17 @@ You will get an output like this:
 # Summary 2025-01-20 ~ 2025-01-27
 
 ## 🚀 Implemented New Features
+
 - Added dark mode support in the UI.
 - Implemented API rate limiting for better security.
 
 ## 🛠 Fixed Bugs & Issues
+
 - Fixed a critical bug in authentication flow.
 - Resolved memory leaks in the background worker.
 
 ## 📖 Documentation & Code Refactoring
+
 - Updated the README with clearer installation steps.
 - Refactored database connection handling for better performance.
 ```

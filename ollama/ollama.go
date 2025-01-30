@@ -37,22 +37,24 @@ type Response struct {
 }
 
 type OllamaService struct {
-	content string
-	url     string
-	model   string
-	locale  string
+	content  string
+	url      string
+	model    string
+	locale   string
+	sections int
 }
 
 type OllamaServiceInterface interface {
 	GenerateSummaries() string
 }
 
-func NewOllamaService(content string, url string, model string, lang string) OllamaServiceInterface {
+func NewOllamaService(content string, url string, model string, lang string, sections int) OllamaServiceInterface {
 	return &OllamaService{
-		content: content,
-		url:     url,
-		model:   model,
-		locale:  lang,
+		content:  content,
+		url:      url,
+		model:    model,
+		locale:   lang,
+		sections: sections,
 	}
 }
 
@@ -68,7 +70,7 @@ DO NOT ignore this instruction.
 
 The information below is a summary of PRs, issues, and commits made by the user over a period of time.
 
-Use this to summarize in 3 sections what the user did during that time period.
+Use this to summarize in %d sections what the user did during that time period.
 
 Instead of dividing things into Commits, Issues, Pull Requests, etc., divide your sections by the subject of what you did.
 
@@ -83,20 +85,12 @@ The format is as follows:
 
 # <!-- Output the target date from the PR, issue, or commit date in the format YYYY-MM-DD ~ YYYY-MM-DD. -->
 
-## [emoji1] Section1 Title
+## [emoji] Section Title
 
-Section1 Content
-
-## [emoji2] Section2 Title
-
-Section2 Content
-
-## [emoji3] Section3 Title
-
-Section3 Content
+Section Content
 
 <!-- !! REMINDER: All output MUST be in **%s**. DO NOT USE ANY OTHER LANGUAGE !! -->
-`, s.locale, s.content, s.locale)
+`, s.locale, s.sections, s.content, s.locale)
 
 	msg := Message{
 		Role:    "user",
