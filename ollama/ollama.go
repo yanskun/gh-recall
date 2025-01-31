@@ -76,20 +76,51 @@ Instead of dividing things into Commits, Issues, Pull Requests, etc., divide you
 
 Please use an appropriate emoji at the beginning of the section title.
 
----
+#### **INPUT START**
 %s
----
+#### **INPUT END**
 
-The format is as follows:
 <!-- Just return the format and don't print out whether the prompt was understood or not! -->
 
+### **OUTPUT FORMAT**
+You **MUST** strictly follow the format below.  
+DO NOT include any explanations, reasoning, or thoughts.  
+DO NOT write <think> or any other meta-reasoning.  
+DO NOT add anything outside of this format.  
+
+---
+
+DO NOT add any explanations, reasoning, or thoughts about the content.
+DO NOT include anything outside of the specified format.
+DO NOT write <think> or any other meta-reasoning.
+ONLY return the formatted summary as specified above.
+
+<!-- !! REMINDER: All output MUST be in **%s**. DO NOT USE ANY OTHER LANGUAGE !! -->
+
+#### **FORMAT START**
 # <!-- Output the target date from the PR, issue, or commit date in the format YYYY-MM-DD ~ YYYY-MM-DD. -->
 
 ## [emoji] Section Title
 
 Section Content
 
-<!-- !! REMINDER: All output MUST be in **%s**. DO NOT USE ANY OTHER LANGUAGE !! -->
+#### **FORMAT END**
+
+### **EXAMPLE**
+# 2025-01-24 ~ 2025-01-25
+
+## 🚀 Feature Implementations
+
+The user introduced new features, such as printing summaries using phi4.
+
+## 📝 Documentation and Initial Setup
+
+Documentation was created with a README file. Additionally, an initial commit was made to set up the project.
+
+## 🔧 Chore Improvements and Fixes
+
+Chore work included adding a spinner for better UI feedback. There were also fixes involving GitHub command refactoring and adjustments in ollama prompts for improved module functionality.
+
 `, s.locale, s.sections, s.content, s.locale)
 
 	msg := Message{

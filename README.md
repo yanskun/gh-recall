@@ -4,69 +4,103 @@ GitHub CLI commands extension.
 
 A GitHub CLI Extension that retrieves and summarizes your recent activities, including Pull Requests, Issues, and Commits.
 
-## Required
+## Requirements
 
+- gh (GitHub CLI) - must be installed
 - [Ollama](https://ollama.com/) - must be installed for AI-based summarization.
-  - [phi4](https://ollama.com/library/phi4) - model is required for the summarization to work. You can install it with
+- Model - Default model: `phi4`, but you can use another model like `"mistral"`, `"llama3"`, etc
+
+### Recommended Model
+
+The default model is phi4, and it is the only model tested so far.
+Other models may work, but their performance and compatibility are not guaranteed.
+
+To install the recommended model:
+
+```bash
+ollama pull phi4
+```
 
 ## Install
 
-```shell
+```bash
 gh extension install yanskun/gh-recall
 ```
 
 ## Usage
 
-```shell
+```bash
 gh recall [options]
+```
+
+### Configuration (`config.toml`)
+
+You can configure default values using a config.toml file.
+The configuration file is stored in:
+
+Linux/macOS: `~/.config/gh-recall/config.toml`
+Windows: `C:\Users\YourUser\.config\gh-recall\config.toml`
+If no `config.toml` is found, it will be automatically generated with default values.
+
+#### Example config.toml
+
+```
+days = 14
+locale = "ja"
+model = "mistral"
+port = 11434
+sections = 5
 ```
 
 ### Options
 
-| Option             | Description                                       | Default |
-| ------------------ | ------------------------------------------------- | ------- |
-| `-h`, `--help`     | Show help for the command.                        | -       |
-| `-d`, `--days`     | Number of days to look back when retrieving data. | `7`     |
-| `-l`, `--locale`   | Output language for the summary (en, ja, etc.).   | `en`    |
-| `-m`, `--model`    | Ollama model to use for summarization.            | `phi4`  |
-| `-p`, `--port`     | Port number for Ollama connection.                | `11434` |
-| `-s`, `--sections` | Number of sections to display in the summary.     | `3`     |
+| Option             | Description                                                    | Default |
+| ------------------ | -------------------------------------------------------------- | ------- |
+| `-h`, `--help`     | Show help for the command.                                     | -       |
+| `-d`, `--days`     | Number of days to look back when retrieving data.              | `7`     |
+| `-l`, `--locale`   | Output language for the summary (en, ja, etc.).                | `en`    |
+| `-m`, `--model`    | Ollama model to use for summarization. (`phi4 is recommended`) | `phi4`  |
+| `-p`, `--port`     | Port number for Ollama connection.                             | `11434` |
+| `-s`, `--sections` | Number of sections to display in the summary.                  | `3`     |
+
+Priority order:
+options > `config.toml` > Default values
 
 ### Examples
 
 - Retrieve the last **7 days** of contributions (default):
 
-```shell
+```bash
 gh recall
 ```
 
 - Retrieve the last **30 days** of contributions:
 
-```shell
+```bash
 gh recall --days 30
 ```
 
 - Output the summary in **Japanese**:
 
-```shell
+```bash
 gh recall --locale ja
 ```
 
 - Use a **different Ollama model**:
 
-```shell
+```bash
 gh recall --model mistral
 ```
 
 - Change the number of sections in the summary:
 
-```shell
+```bash
 gh recall --sections 5
 ```
 
 - Specify the port number for Ollama:
 
-```shell
+```bash
 gh recall --port 12345
 ```
 
@@ -81,20 +115,17 @@ gh recall --days 7 --locale en --model phi4 --sections 3
 You will get an output like this:
 
 ```markdown
-# Summary 2025-01-20 ~ 2025-01-27
+# 2025-01-24 ~ 2025-01-25
 
-## 🚀 Implemented New Features
+## 🚀 Feature Implementations
 
-- Added dark mode support in the UI.
-- Implemented API rate limiting for better security.
+The user introduced new features, such as printing summaries using phi4.
 
-## 🛠 Fixed Bugs & Issues
+## 📝 Documentation and Initial Setup
 
-- Fixed a critical bug in authentication flow.
-- Resolved memory leaks in the background worker.
+Documentation was created with a README file. Additionally, an initial commit was made to set up the project.
 
-## 📖 Documentation & Code Refactoring
+## 🔧 Chore Improvements and Fixes
 
-- Updated the README with clearer installation steps.
-- Refactored database connection handling for better performance.
+Chore work included adding a spinner for better UI feedback. There were also fixes involving GitHub command refactoring and adjustments in ollama prompts for improved module functionality.
 ```
