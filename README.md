@@ -4,6 +4,9 @@ GitHub CLI commands extension.
 
 A GitHub CLI Extension that retrieves and summarizes your recent activities, including Pull Requests, Issues, and Commits.
 
+![image](https://github.com/user-attachments/assets/c2da796c-e773-4cc4-beaa-709afb8f8abc)
+
+
 ## Requirements
 
 - gh (GitHub CLI) - must be installed
