@@ -16,6 +16,8 @@ type Request struct {
 	Model    string    `json:"model"`
 	Messages []Message `json:"messages"`
 	Stream   bool      `json:"stream"`
+	Raw      bool      `json:"raw"`
+	Template string    `json:"template"`
 }
 
 type Message struct {
@@ -80,22 +82,22 @@ Please use an appropriate emoji at the beginning of the section title.
 %s
 #### **INPUT END**
 
-<!-- Just return the format and don't print out whether the prompt was understood or not! -->
+!! REMINDER: All output MUST be in **%s**. DO NOT USE ANY OTHER LANGUAGE !!
 
-### **OUTPUT FORMAT**
-You **MUST** strictly follow the format below.  
-DO NOT include any explanations, reasoning, or thoughts.  
-DO NOT write <think> or any other meta-reasoning.  
-DO NOT add anything outside of this format.  
+`, s.locale, s.sections, s.content, s.locale)
 
-#### **FORMAT START**
-# <!-- Output the target date from the PR, issue, or commit date in the format YYYY-MM-DD ~ YYYY-MM-DD. -->
-
+	msg := Message{
+		Role:    "user",
+		Content: prompt,
+	}
+	req := Request{
+		Model:    s.model,
+		Stream:   false,
+		Messages: []Message{msg},
+		Template: `
 ## [emoji] Section Title
 
 Section Content
-
-#### **FORMAT END**
 
 ### **EXAMPLE**
 # 2025-01-24 ~ 2025-01-25
@@ -111,28 +113,8 @@ Documentation was created with a README file. Additionally, an initial commit wa
 ## 🔧 Chore Improvements and Fixes
 
 Chore work included adding a spinner for better UI feedback. There were also fixes involving GitHub command refactoring and adjustments in ollama prompts for improved module functionality.
-
-#### **EXAMPLE END**
-
-!! IMPORTANT !! YOU MUST FOLLOW THIS RULE STRICTLY.
-
-DO NOT add any explanations, reasoning, or thoughts about the content.
-DO NOT include anything outside of the specified format.
-DO NOT write <think> or any other meta-reasoning.
-ONLY return the formatted summary as specified above.
-
-!! REMINDER: All output MUST be in **%s**. DO NOT USE ANY OTHER LANGUAGE !!
-
-`, s.locale, s.sections, s.content, s.locale)
-
-	msg := Message{
-		Role:    "user",
-		Content: prompt,
-	}
-	req := Request{
-		Model:    s.model,
-		Stream:   false,
-		Messages: []Message{msg},
+`,
+		Raw: true,
 	}
 	resp, err := s.requestOllama(req)
 	if err != nil {
